@@ -1,0 +1,100 @@
+<!-- accounts/templates/accounts/signup.html -->
+{% extends 'partial/base.html' %}
+{% block title %}Signup{% endblock %}
+{% block content %}
+<div class="signup-container">
+    <h2>Sign Up</h2>
+    <form method="POST" aria-label="Signup form">
+        {% csrf_token %}
+        <input type="text" name="username" class="input-field" placeholder="Username" required autofocus value="{{ request.POST.username|default:'' }}" />
+        <input type="email" name="email" class="input-field" placeholder="Email" required value="{{ request.POST.email|default:'' }}" />
+        <input type="password" name="password" class="input-field" placeholder="Password" required />
+        <input type="password" name="confirmPassword" class="input-field" placeholder="Confirm Password" required />
+        <button type="submit" class="btn-signup">Create Account</button>
+    </form>
+    <div id="message" class="message">
+        {% if messages %}
+            {% for message in messages %}
+                <span class="{% if message.tags == 'success' %}success{% else %}error{% endif %}">{{ message }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+    body {
+        margin: 0;
+        height: 100vh;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .signup-container {
+        background: #fff;
+        padding: 40px 50px;
+        border-radius: 15px;
+        box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+        width: 360px;
+        text-align: center;
+    }
+
+    .signup-container h2 {
+        margin-bottom: 30px;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 12px 15px;
+        margin: 12px 0;
+        border: none;
+        border-bottom: 2px solid #ddd;
+        font-size: 16px;
+        outline: none;
+        transition: 0.3s;
+        font-weight: 300;
+    }
+
+    .input-field:focus {
+        border-bottom-color: #ff6a88;
+    }
+
+    .btn-signup {
+        background: #ff6a88;
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 30px;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        margin-top: 20px;
+        font-weight: 600;
+        transition: background 0.3s;
+    }
+
+    .btn-signup:hover {
+        background: #e05a74;
+    }
+
+    .message {
+        margin-top: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .message.success {
+        color: #27ae60;
+    }
+
+    .message.error {
+        color: #e74c3c;
+    }
+</style>
+{% endblock %}
