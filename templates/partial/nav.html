@@ -1,0 +1,11 @@
+<!-- templates/partial/nav.html -->
+<nav role="navigation" aria-label="Primary Navigation">
+    {% if user.is_authenticated %}
+        <a href="{% url 'task_list' %}" class="{% if request.path == '/' %}active{% endif %}" tabindex="0">To-Do List</a>
+        <a href="{% url 'calendar' %}" class="{% if request.path == '/calendar/' %}active{% endif %}" tabindex="0">Calendar</a>
+        <a href="{% url 'accounts:logout' %}" tabindex="0">Logout</a>
+    {% else %}
+        <a href="{% url 'accounts:login' %}" class="{% if request.path == '/accounts/login/' %}active{% endif %}" tabindex="0">Login</a>
+        <a href="{% url 'accounts:signup' %}" class="{% if request.path == '/accounts/signup/' %}active{% endif %}" tabindex="0">Signup</a>
+    {% endif %}
+</nav>

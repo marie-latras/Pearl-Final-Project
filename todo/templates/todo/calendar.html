@@ -1,0 +1,212 @@
+<!-- todo/templates/todo/calendar.html -->
+{% extends 'partial/base.html' %}
+{% block title %}Calendar{% endblock %}
+{% block content %}
+<section id="calendar" aria-label="Calendar" tabindex="0">
+    <header>
+        <a href="?year={{ prev_year }}&month={{ prev_month }}" class="btn" aria-label="Previous Month"><</a>
+        <div id="monthYear" aria-live="polite" aria-atomic="true">
+            {{ month|date:"F" }} {{ year }}
+        </div>
+        <a href="?year={{ next_year }}&month={{ next_month }}" class="btn" aria-label="Next Month">></a>
+    </header>
+    <table role="grid" aria-readonly="true">
+        <thead>
+            <tr>
+                <th scope="col">Sun</th>
+                <th scope="col">Mon</th>
+                <th scope="col">Tue</th>
+                <th scope="col">Wed</th>
+                <th scope="col">Thu</th>
+                <th scope="col">Fri</th>
+                <th scope="col">Sat</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for week in calendar %}
+                <tr>
+                    {% for day in week %}
+                        <td {% if day.day == today.day and month == today.month and year == today.year %}class="today"{% endif %}>
+                            {% if day.day %}
+                                <div class="day-number">{{ day.day }}</div>
+                                <ul class="task-list">
+                                    {% for task in day.tasks %}
+                                        <li class="{% if task.completed %}completed{% endif %} {% if task.deadline < today %}overdue{% endif %}">
+                                            <span class="task-title">{{ task.title }}</span>
+                                            <span class="task-time">{{ task.deadline|date:"H:i" }}</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<style>
+    #calendar {
+        background: #f6f6f6;
+        border-radius: 14px;
+        padding: 1rem 1.5rem 1.5rem;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        user-select: none;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    #calendar header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        font-size: 1.25rem;
+        color: #6b5b95;
+        padding: 1rem 0;
+    }
+
+    #calendar header a {
+        background: #feb236;
+        border: none;
+        color: #3e2e1a;
+        padding: 0.4rem 0.9rem;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0 6px 12px rgba(254, 178, 54, 0.5);
+        transition: all 0.3s ease;
+        user-select: none;
+        text-decoration: none;
+    }
+
+    #calendar header a:hover {
+        background-color: #f9a825;
+        box-shadow: 0 8px 18px rgba(249, 168, 37, 0.7);
+        transform: translateY(-1px);
+    }
+
+    #calendar table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 4px;
+        user-select: none;
+    }
+
+    #calendar th, #calendar td {
+        text-align: center;
+        padding: 0.5rem;
+        border-radius: 8px;
+        vertical-align: top;
+        background: #fff;
+    }
+
+    #calendar th {
+        font-weight: 600;
+        color: #6b5b95;
+        background: transparent;
+        padding: 0.75rem;
+    }
+
+    #calendar td {
+        cursor: default;
+        transition: all 0.3s ease;
+        height: 100px;
+        position: relative;
+    }
+
+    #calendar td:hover {
+        background-color: #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    #calendar td.today {
+        background-color: #feb23610;
+        border: 2px solid #feb236;
+    }
+
+    .day-number {
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        color: #6b5b95;
+    }
+
+    .task-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-size: 0.75rem;
+        max-height: 80px;
+        overflow-y: auto;
+    }
+
+    .task-list li {
+        background: #f8f9fa;
+        border-radius: 4px;
+        padding: 0.2rem 0.4rem;
+        margin-bottom: 0.2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .task-list li.completed {
+        text-decoration: line-through;
+        color: #607d35;
+        background-color: #dcedc1;
+    }
+
+    .task-list li.overdue:not(.completed) {
+        background-color: #ffebee;
+        color: #d32f2f;
+    }
+
+    .task-title {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .task-time {
+        font-size: 0.7rem;
+        color: #666;
+    }
+
+    .task-list::-webkit-scrollbar {
+        width: 4px;
+    }
+    .task-list::-webkit-scrollbar-thumb {
+        background-color: #feb236;
+        border-radius: 10px;
+    }
+    .task-list::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    @media (max-width: 768px) {
+        #calendar {
+            max-width: 95vw;
+            padding: 1rem;
+        }
+
+        #calendar td {
+            height: 80px;
+        }
+
+        .task-list {
+            font-size: 0.7rem;
+            max-height: 60px;
+        }
+
+        .task-time {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
